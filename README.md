@@ -33,7 +33,10 @@ A self-hosted DNS server that blocks ads and trackers while resolving domains vi
 5. Verify using `dig` and `nslookup`
 
 ### Screenshot / Demo
-_Add Grafana graphs or `dig` output here later._
+```
+dig fb.com @127.0.0.1 -p 5335 | grep SERVER
+;; SERVER: 127.0.0.1#5335(127.0.0.1)
+```
 
 ---
 
