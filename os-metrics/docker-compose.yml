@@ -11,8 +11,9 @@ services:
 
   node-exporter:
     image: prom/node-exporter:latest
-    network_mode: "host"
-    pid: "host"
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
     restart: unless-stopped
 
   alertmanager:
