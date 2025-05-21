@@ -19,7 +19,7 @@ The server runs indefinitely until interrupted by the user. The server can be st
 import socket
 import threading
 import time
-import os
+import datetime
 
 def print_accept_queue_size():
     """
@@ -42,7 +42,7 @@ def print_accept_queue_size():
                     print("No connections in the accept queue.")
         except Exception as e:
             print(f"Error reading accept queue size: {e}")
-        time.sleep(5)
+        time.sleep(300)
 
 
 def handle_client_request(client_socket, addr):
@@ -53,19 +53,28 @@ def handle_client_request(client_socket, addr):
     """
     # while loop needed to keep the connection open and handle multiple messages
     # from the client
-    print(f"Handling {addr} in process")
+    try:
+        hostname = socket.gethostbyaddr(addr[0])[0]
+    except Exception:
+        hostname = "Unknown"
+    connect_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"New connection from {addr[0]}:{addr[1]} ({hostname}) at {connect_time}")
+    total_bytes = 0
     while True:
         try:
             # Receive data from the client
             data = client_socket.recv(1024)
             if not data:
                 break
-            print(f"Received: {data.decode('utf-8')}")
+            total_bytes += len(data)
+            print(f"Received from {addr}: {data.decode('utf-8')}")
             # Echo the data back to the client
             client_socket.sendall(data)
         except Exception as e:
             print(f"Error: {e}")
             break
+    disconnect_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"Connection from {addr[0]}:{addr[1]} closed at {disconnect_time} (total bytes: {total_bytes})")
     client_socket.close()
 
 
