@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: flask-roadmap-app
+    ports:
+      - "5000:5000"
+    volumes:
+      # Persist the SQLite database
+      - db_data:/app/data
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - DB_PATH=/app/data/roadmap.db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  # Optional: Use named volume instead of bind mount
+  # Uncomment the lines below and replace "./data:/app/data" with "db_data:/app/data" above
+  db_data:

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-xl font-bold mb-4">Edit Topic</h2>
+<form method="post" class="space-y-4">
+    <label class="block">
+        Title:
+        <input type="text" name="title" value="{{ topic.title }}" required
+               class="w-full p-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2">
+    </label>
+    <label class="block">
+        Description:
+        <textarea name="description"
+                  class="w-full p-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2">{{ topic.description }}</textarea>
+    </label>
+    <label class="block">
+        Category:
+        <select name="category_id"
+                class="w-full p-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2">
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if cat.id == topic.category_id %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label class="block">
+        Month:
+        <input type="text" name="month" value="{{ topic.month }}" required
+               class="w-full p-2 rounded bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2">
+    </label>
+    <button type="submit" class="bg-blue-600 px-4 py-2 rounded text-white">Save</button>
+</form>
+{% endblock %}

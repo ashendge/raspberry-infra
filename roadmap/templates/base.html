@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SRE Interview Prep Roadmap{% endblock %}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
+    <style>
+        .roadmap-node {
+            transition: all 0.3s ease;
+        }
+        .roadmap-node:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .completed {
+            background: linear-gradient(135deg, #064e3b, #065f46);
+            color: #d1fae5;
+            border-color: #059669;
+        }
+        .in-progress {
+            background: linear-gradient(135deg, #451a03, #78350f);
+            color: #fef3c7;
+            border-color: #d97706;
+        }
+        .tree-item {
+            transition: all 0.2s ease;
+        }
+        .tree-item:hover {
+            background-color: rgba(75, 85, 99, 0.5);
+        }
+        .tree-toggle {
+            transition: transform 0.2s ease;
+        }
+        .tree-toggle.expanded {
+            transform: rotate(90deg);
+        }
+        @media (max-width: 768px) {
+            .mobile-stack {
+                flex-direction: column;
+            }
+            .mobile-full {
+                width: 100%;
+            }
+            .mobile-text-sm {
+                font-size: 0.875rem;
+            }
+            .mobile-p-2 {
+                padding: 0.5rem;
+            }
+            .mobile-mb-4 {
+                margin-bottom: 1rem;
+            }
+        }
+        .hamburger {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+            .mobile-menu {
+                display: none;
+            }
+            .mobile-menu.active {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <nav class="bg-gray-800 p-4 border-b border-gray-700">
+        <div class="container mx-auto">
+            <!-- Mobile-friendly navigation -->
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                    SRE Prep Roadmap
+                </h1>
+                <!-- Mobile hamburger menu -->
+                <button class="hamburger md:hidden text-white focus:outline-none" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <!-- Desktop menu -->
+                <div class="hidden md:flex space-x-2 lg:space-x-4">
+                    <a href="/" class="px-3 py-2 bg-blue-600 rounded hover:bg-blue-700 transition text-sm lg:text-base">Roadmap</a>
+                    <a href="/tree" class="px-3 py-2 bg-green-600 rounded hover:bg-green-700 transition text-sm lg:text-base">Tree View</a>
+                    <a href="/progress" class="px-3 py-2 bg-yellow-600 rounded hover:bg-yellow-700 transition text-sm lg:text-base">Progress</a>
+                    <a href="/add_topic" class="px-3 py-2 bg-purple-600 rounded hover:bg-purple-700 transition text-sm lg:text-base">Add Topic</a>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu mt-4 space-y-2">
+                <a href="/" class="block px-3 py-2 bg-blue-600 rounded hover:bg-blue-700 transition">Roadmap</a>
+                <a href="/tree" class="block px-3 py-2 bg-green-600 rounded hover:bg-green-700 transition">Tree View</a>
+                <a href="/progress" class="block px-3 py-2 bg-yellow-600 rounded hover:bg-yellow-700 transition">Progress</a>
+                <a href="/add_topic" class="block px-3 py-2 bg-purple-600 rounded hover:bg-purple-700 transition">Add Topic</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 lg:p-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.querySelector('.mobile-menu');
+            menu.classList.toggle('active');
+        }
+
+        // Toggle topic completion
+        async function toggleTopic(topicId) {
+            try {
+                const response = await fetch(`/api/topics/${topicId}/toggle`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                const data = await response.json();
+                if (data.success) {
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Toggle subtopic completion
+        async function toggleSubtopic(subtopicId) {
+            try {
+                const response = await fetch(`/api/subtopics/${subtopicId}/toggle`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                const data = await response.json();
+                if (data.success) {
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

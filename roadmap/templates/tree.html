@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Tree View - SRE Interview Prep Roadmap{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Tree View</h2>
+<ul>
+    {% for topic in topics %}
+    <li x-data="{ open: false }" class="mb-2">
+        <div class="flex items-center tree-item cursor-pointer" @click="open = !open">
+            <svg :class="{'expanded': open}" class="tree-toggle w-4 h-4 mr-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="font-semibold">{{ topic.name }}</span>
+        </div>
+        <ul x-show="open" class="ml-6 mt-1">
+            {% for subtopic in topic.subtopics %}
+            <li class="tree-item py-1">{{ subtopic.name }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

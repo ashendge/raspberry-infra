@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-gray-800 p-6 rounded-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center">Add New Topic</h1>
+    
+    <form method="POST" class="space-y-4">
+        <div>
+            <label class="block text-sm font-medium mb-2">Category</label>
+            <select name="category_id" required class="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:border-blue-500">
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium mb-2">Title</label>
+            <input type="text" name="title" required class="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:border-blue-500">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium mb-2">Month</label>
+            <input type="text" name="month" placeholder="e.g., June 2025" required class="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:border-blue-500">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium mb-2">Description (Optional)</label>
+            <textarea name="description" rows="3" class="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:border-blue-500"></textarea>
+        </div>
+        
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-medium transition">
+            Add Topic
+        </button>
+    </form>
+</div>
+{% endblock %}
