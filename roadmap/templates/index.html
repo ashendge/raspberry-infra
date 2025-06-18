@@ -3,16 +3,38 @@
 {% block content %}
 <div x-data="roadmapData()" class="space-y-8">
     <!-- Legend -->
-    <div class="bg-gray-800 p-4 rounded-lg">
-        <h2 class="text-xl font-bold mb-4">Categories</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {% for category in categories %}
-            <div class="flex items-center space-x-2">
-                <div class="w-4 h-4 rounded" style="background-color: {{ category.color }}"></div>
-                <span class="text-sm">{{ category.name }}</span>
-            </div>
-            {% endfor %}
-        </div>
+<div style="background: #1e293b; padding: 1.5em; border-radius: 10px; margin-bottom: 2em;">
+    <h2 style="color: #fff; font-size: 1.3em; font-weight: bold; margin-bottom: 1em;">Categories</h2>
+    <ul style="
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1em;
+        list-style: none;
+        padding: 0;
+        margin: 0;">
+        {% for category in categories %}
+        <li>
+            <a href="{{ url_for('category_view', category_id=category.id) }}"
+               style="
+                   display: block;
+                   background: #334155; /* Darker pill background */
+                   color: #fff;         /* White text for contrast */
+                   border-radius: 6px;
+                   padding: 0.6em 1em;
+                   font-weight: 500;
+                   text-decoration: none;
+                   box-shadow: 0 1px 4px #0001;
+                   border-left: 6px solid {{ category.color }};
+                   transition: background 0.2s, color 0.2s;
+               "
+               onmouseover="this.style.background='{{ category.color }}22'; this.style.color='{{ category.color }}';"
+               onmouseout="this.style.background='#334155'; this.style.color='#fff';">
+                {{ category.name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
     </div>
 
     <!-- Roadmap by Month -->

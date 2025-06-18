@@ -4,14 +4,26 @@ SRE Interview Prep Roadmap Application
 A Flask-based web application for tracking interview preparation progress
 """
 
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date
 import json
+import logging
 import os
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s'
+)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
+
+@app.before_request
+def log_visitor_info():
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    user_agent = request.headers.get('User-Agent', 'unknown')
+    logging.info(f"Visitor IP: {ip} | User-Agent: {user_agent}")
 
 # Use persistent database path
 DB_PATH = os.environ.get('DB_PATH', '/app/data/roadmap.db')
@@ -255,6 +267,30 @@ def get_topics():
             'subtopics': subtopics
         })
     return jsonify(result)
+
+@app.route('/category/<int:category_id>')
+def category_view(category_id):
+    category = Category.query.get_or_404(category_id)
+    # Get topics for this category
+    topics = Topic.query.filter_by(category_id=category.id).all()
+    
+    # Group topics by month in chronological order
+    month_order = [
+        'June 2025', 'July 2025', 'August 2025', 'September 2025', 
+        'October 2025', 'November 2025', 'December 2025', 
+        'January 2026', 'February 2026'
+    ]
+    months = {month: [] for month in month_order}
+    for topic in topics:
+        if topic.month in months:
+            months[topic.month].append(topic)
+    
+    return render_template(
+        'category.html',
+        category=category,
+        months=months
+    )
+
 
 @app.route('/api/topics/<int:topic_id>/toggle', methods=['POST'])
 def toggle_topic(topic_id):

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category.name }} - Roadmap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1e293b;
+            margin: 0;
+            padding: 0;
+            color: #f1f5f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2em auto;
+            background: #273549;
+            padding: 2em;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px #0004;
+        }
+        h1 {
+            color: {{ category.color }};
+            margin-bottom: 0.5em;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1em;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: {{ category.color }};
+            text-decoration: underline;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #334155;
+            margin: 1em 0 2em 0;
+        }
+        .month-section {
+            margin-bottom: 2em;
+        }
+        h2 {
+            color: #fff;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.2em;
+            margin-top: 0;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .topic, .subtopic {
+            padding: 0.5em 0;
+        }
+        .topic-title, .subtopic-title {
+            font-weight: 500;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #64748b;
+        }
+        .checkmark {
+            color: #10b981;
+            margin-right: 0.5em;
+        }
+        .subtopic {
+            margin-left: 2em;
+            font-size: 0.97em;
+        }
+        .topic {
+            margin-left: 1em;
+        }
+        .desc {
+            color: #94a3b8;
+            font-size: 0.96em;
+            margin-top: 0.2em;
+        }
+        /* Optional: Add hover effect for topic/subtopic titles */
+        .topic-title:not(.completed):hover,
+        .subtopic-title:not(.completed):hover {
+            color: {{ category.color }};
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ category.name }}</h1>
+        <a class="back-link" href="{{ url_for('index') }}">← Back to All Categories</a>
+        <hr>
+        {% for month, topics in months.items() %}
+            {% if topics %}
+            <div class="month-section">
+                <h2>{{ month }}</h2>
+                <ul>
+                    {% for topic in topics %}
+                        <li class="topic">
+                            <span class="topic-title {% if topic.completed %}completed{% endif %}">
+                                {% if topic.completed %}
+                                    <span class="checkmark">&#10003;</span>
+                                {% endif %}
+                                {{ topic.title }}
+                            </span>
+                            {% if topic.description %}
+                                <div class="desc">{{ topic.description }}</div>
+                            {% endif %}
+                            {% if topic.subtopics %}
+                                <ul>
+                                    {% for subtopic in topic.subtopics %}
+                                        <li class="subtopic">
+                                            <span class="subtopic-title {% if subtopic.completed %}completed{% endif %}">
+                                                {% if subtopic.completed %}
+                                                    <span class="checkmark">&#10003;</span>
+                                                {% endif %}
+                                                {{ subtopic.title }}
+                                            </span>
+                                            {% if subtopic.description %}
+                                                <span class="desc">- {{ subtopic.description }}</span>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</body>
+</html>
